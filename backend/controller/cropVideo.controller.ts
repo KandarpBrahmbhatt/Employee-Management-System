@@ -3,16 +3,6 @@ import { Request, Response } from "express"
 import { error } from "node:console"
 import ffmpeg from "fluent-ffmpeg";
 
-/**
- * EXPLANATION OF THE ERROR & FIX:
- * - Error: TS2339: Property 'file' does not exist on type 'Request'.
- * - Reason: Express is a generic web framework. Its default TypeScript typings do not
- *   include file upload properties (like `req.file`) because file upload is handled by
- *   external middleware (such as `multer`), not Express core.
- * - Fix: We installed the `@types/multer` developer dependency. `@types/multer` utilizes
- *   TypeScript's declaration merging to automatically extend Express's `Request` interface
- *   with the `file` and `files` properties. Now `req: Request` natively supports `req.file`.
- */
 export const videoCrop = async (req: Request, res: Response) => {
     try {
         console.log(req.body)
@@ -32,7 +22,7 @@ export const videoCrop = async (req: Request, res: Response) => {
         }
 
         if (end <=start) {
-            return res.status(400).json({message:"end time is larger then starting time"})
+            return res.status(400).json({message:"start time is larger then end time"})
         }
 
         const inputPath  = req.file.path
